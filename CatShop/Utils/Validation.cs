@@ -6,7 +6,12 @@ public class Validation
 {
     public bool ValidateOption(string? option)
     {
-        return option is not null && Regex.IsMatch(option, @"^[1-6]{1,1}$")
+        return option is not null && Regex.IsMatch(option, @"^[1-6]{1,1}$");
+    }
+    
+    public bool ValidateId(string? id)
+    {
+        return id is not null && Regex.IsMatch(id, @"^[0-9]{1,}$");
     }
     
     public bool ValidateName(string? name)

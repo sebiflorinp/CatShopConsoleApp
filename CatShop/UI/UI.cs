@@ -1,9 +1,16 @@
 using CatShop.Models;
+using CatShop.Utils;
 
 namespace CatShop.UI;
 
 public class UI
 {
+    public Validation validation;
+
+    public UI()
+    {
+        validation = new Validation();
+    }
     public void Run()
     {
         this.DisplayInstructions();
@@ -12,7 +19,6 @@ public class UI
         bool running = true;
         string? receivedValue;
         int chosenOption = 0;
-        bool validInput = false;
         
         // app loop
         while (running)
@@ -20,11 +26,10 @@ public class UI
             // get an option from the user
             Console.WriteLine("Choose an option.");
             receivedValue = Console.ReadLine();
-            int.TryParse(receivedValue, out chosenOption);
-            if (chosenOption == 0 || Convert.ToInt32(receivedValue) > 6 || Convert.ToInt32(receivedValue) < 1)
+            while (!validation.ValidateOption(receivedValue))
             {
-                Console.WriteLine("The input option is invalid");
-                continue;
+                Console.WriteLine("The input option is invalid, please input a valid option.");
+                receivedValue = Console.ReadLine();
             }
             chosenOption = Convert.ToInt32(receivedValue);
 
@@ -32,19 +37,65 @@ public class UI
             {
                 // Add a cat
                 case 1:
-                    // get name
+                    // Get the name
+                    Console.WriteLine("Please input the name of the cat.");
+                    receivedValue = Console.ReadLine();
+                    while (!validation.ValidateName(receivedValue))
+                    {
+                        Console.WriteLine("The input name is invalid, please input a valid one.");
+                        receivedValue = Console.ReadLine();
+                    }
+
+                    string? name = receivedValue;
                     
-                    // get age
+                    // Get the age
+                    Console.WriteLine("Please input the age of the cat.");
+                    receivedValue = Console.ReadLine();
+                    while (!validation.ValidateAge(receivedValue))
+                    {
+                        Console.WriteLine("The input age is invalid, please input a valid one.");
+                        receivedValue = Console.ReadLine();
+                    }
+
+                    int age = Convert.ToInt32(receivedValue);
                     
-                    // get furColor
+                    // Get the furColor
+                    Console.WriteLine("Please input the fur color of the cat. It can have one of the following colors: Black, White, Brown, Gray, Cream");
+                    receivedValue = Console.ReadLine();
+                    while (!validation.ValidateFurColor(receivedValue))
+                    {
+                        Console.WriteLine("The input fur color is invalid, please input a valid one.");
+                        receivedValue = Console.ReadLine();
+                    }
+
+                    string? furColor = receivedValue;                    
                     
-                    // get favoriteFood
+                    // Get the favoriteFood
+                    Console.WriteLine("Please input the favorite food of the cat. It can have one of the following colors: Meat, Milk, Cheese.\n" +
+                                      "If the cat doesn't have a favorite food don't input anything. (leave the space blank)");
+                    receivedValue = Console.ReadLine();
+                    while (!validation.ValidateFavoriteFood(receivedValue))
+                    {
+                        Console.WriteLine("The input favorite food is invalid, please input a valid one.");
+                        receivedValue = Console.ReadLine();
+                    }
+
+                    string? favoriteFood = receivedValue;  
                     
                     // add the cat
                     break;
                 // Find a cat by id
                 case 2:
-                    // input id
+                    // Get the id
+                    Console.WriteLine("Please input the id of the cat.");
+                    receivedValue = Console.ReadLine();
+                    while (!validation.ValidateId(receivedValue))
+                    {
+                        Console.WriteLine("The input id is invalid, please input a valid one.");
+                        receivedValue = Console.ReadLine();
+                    }
+
+                    int? id = Convert.ToInt32(receivedValue);
                     
                     // get the cat
                     
@@ -58,15 +109,76 @@ public class UI
                     break;
                 // Update a cat
                 case 4:
-                    // get the id
+                    // Get the id
+                    Console.WriteLine("Please input the id of the cat that will be updated.");
+                    receivedValue = Console.ReadLine();
+                    while (!validation.ValidateId(receivedValue))
+                    {
+                        Console.WriteLine("The input id is invalid, please input a valid one.");
+                        receivedValue = Console.ReadLine();
+                    }
+
+                    id = Convert.ToInt32(receivedValue);
                     
-                    // get required data for updating a cat
+                    // Get the updated name
+                    Console.WriteLine("Please input the new name of the cat.");
+                    receivedValue = Console.ReadLine();
+                    while (!validation.ValidateName(receivedValue))
+                    {
+                        Console.WriteLine("The input name is invalid, please input a valid one.");
+                        receivedValue = Console.ReadLine();
+                    }
+
+                    string? updatedName = receivedValue;
+                    
+                    // Get the updated age
+                    Console.WriteLine("Please input the new age of the cat.");
+                    receivedValue = Console.ReadLine();
+                    while (!validation.ValidateAge(receivedValue))
+                    {
+                        Console.WriteLine("The input age is invalid, please input a valid one.");
+                        receivedValue = Console.ReadLine();
+                    }
+
+                    int updatedAge = Convert.ToInt32(receivedValue);
+                    
+                    // Get the furColor
+                    Console.WriteLine("Please input the new fur color of the cat. It can have one of the following colors: Black, White, Brown, Gray, Cream");
+                    receivedValue = Console.ReadLine();
+                    while (!validation.ValidateFurColor(receivedValue))
+                    {
+                        Console.WriteLine("The input fur color is invalid, please input a valid one.");
+                        receivedValue = Console.ReadLine();
+                    }
+
+                    string? updatedFurColor = receivedValue;                    
+                    
+                    // Get the favoriteFood
+                    Console.WriteLine("Please input the new favorite food of the cat. It can have one of the following colors: Meat, Milk, Cheese.\n" +
+                                      "If the cat doesn't have a favorite food don't input anything. (leave the space blank)");
+                    receivedValue = Console.ReadLine();
+                    while (!validation.ValidateFavoriteFood(receivedValue))
+                    {
+                        Console.WriteLine("The input favorite food is invalid, please input a valid one.");
+                        receivedValue = Console.ReadLine();
+                    }
+
+                    string? updatedFavoriteFood = receivedValue;
                     
                     // perform the update
                     break;
                 // Delete a cat
                 case 5:
-                    // get the id
+                    // Get the id
+                    Console.WriteLine("Please input the id of the cat that will be deleted.");
+                    receivedValue = Console.ReadLine();
+                    while (!validation.ValidateId(receivedValue))
+                    {
+                        Console.WriteLine("The input id is invalid, please input a valid one.");
+                        receivedValue = Console.ReadLine();
+                    }
+
+                    id = Convert.ToInt32(receivedValue);
                     
                     // delete the cat
                     break;
