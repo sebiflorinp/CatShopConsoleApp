@@ -1,15 +1,19 @@
 using CatShop.Models;
+using CatShop.Services;
 using CatShop.Utils;
+using ConsoleTables;
 
 namespace CatShop.UI;
 
 public class UI
 {
     public Validation validation;
+    public CatService catService;
 
     public UI()
     {
         validation = new Validation();
+        catService = new CatService();
     }
     public void Run()
     {
@@ -80,9 +84,9 @@ public class UI
                         receivedValue = Console.ReadLine();
                     }
 
-                    string? favoriteFood = receivedValue;  
-                    
-                    // add the cat
+                    string? favoriteFood = receivedValue;
+                    Cat newCat = new Cat() { Age = age, FavoriteFood = favoriteFood, FurColor = furColor, Name = name };
+                    catService.Add(newCat);
                     break;
                 // Find a cat by id
                 case 2:
@@ -95,20 +99,42 @@ public class UI
                         receivedValue = Console.ReadLine();
                     }
 
-                    int? id = Convert.ToInt32(receivedValue);
+                    int id = Convert.ToInt32(receivedValue);
                     
-                    // get the cat
+                    // Get the cat
+                    Cat foundCat = null;
+                    try
+                    {
+                        foundCat = catService.FindById(id);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
                     
-                    // display the response
+                    // Display the cat
+                    List<Cat> toDisplay = new List<Cat>() { foundCat };
+                    this.DisplayData(toDisplay);
                     break;
                 // Display all cats
                 case 3:
-                    // get all cats
-                    
-                    // display them
+                    // Get all cats
+                    List<Cat> catsToDisplay = catService.GetAll();
+                    // Display them
+                    if (catsToDisplay.Count == 0)
+                    {
+                        Console.WriteLine("There are no cats to display.");
+                    }
+                    else
+                    {
+                        DisplayData(catsToDisplay);
+                    }
                     break;
                 // Update a cat
                 case 4:
+                    List<Cat> cats = catService.GetAll();
+                    DisplayData(cats);
+                    
                     // Get the id
                     Console.WriteLine("Please input the id of the cat that will be updated.");
                     receivedValue = Console.ReadLine();
@@ -164,11 +190,26 @@ public class UI
                     }
 
                     string? updatedFavoriteFood = receivedValue;
-                    
-                    // perform the update
+                    Cat updatedCat = new Cat()
+                    {
+                        Age = updatedAge, FavoriteFood = updatedFavoriteFood, FurColor = updatedFurColor,
+                        Name = updatedName
+                    };
+
+                    try
+                    {
+                        catService.UpdateById(id, updatedCat);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
                     break;
                 // Delete a cat
                 case 5:
+                    cats = catService.GetAll();
+                    DisplayData(cats); 
+                    
                     // Get the id
                     Console.WriteLine("Please input the id of the cat that will be deleted.");
                     receivedValue = Console.ReadLine();
@@ -179,8 +220,15 @@ public class UI
                     }
 
                     id = Convert.ToInt32(receivedValue);
-                    
-                    // delete the cat
+
+                    try
+                    {
+                        catService.Delete(id);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
                     break;
                 // close the application
                 case 6:
@@ -193,7 +241,12 @@ public class UI
 
     public void DisplayData(List<Cat> catsToDisplay)
     {
-        
+        var table = new ConsoleTable("Id", "Name", "Age", "FurColor", "FavoriteFood");
+        foreach (Cat cat in catsToDisplay)
+        {
+            table.AddRow(cat.Id, cat.Name, cat.Age, cat.FurColor, cat.FavoriteFood);
+        }
+        ConsoleTable.From(catsToDisplay).Write(Format.MarkDown);
     }
 
     public void DisplayInstructions()

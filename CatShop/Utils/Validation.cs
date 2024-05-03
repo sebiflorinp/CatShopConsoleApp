@@ -31,6 +31,6 @@ public class Validation
 
     public bool ValidateFavoriteFood(string? favoriteFood)
     {
-        return favoriteFood is null || Regex.IsMatch(favoriteFood, @"Meat|Milk|Cheese");
+        return favoriteFood is null || favoriteFood == "" || Regex.IsMatch(favoriteFood, @"Meat|Milk|Cheese");
     }
 }
