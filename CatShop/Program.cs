@@ -1,3 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿using CatShop.UI;
 
-Console.WriteLine("Hello, World!");
+UI app = new UI();
+app.Run();
